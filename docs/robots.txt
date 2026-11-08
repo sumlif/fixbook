@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sumlif.github.io/fixbook/sitemap.xml
