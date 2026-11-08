@@ -63,9 +63,12 @@ def write(path, text):
             text = text.replace('</head>', '<meta name="google-site-verification" content="' + esc(CONFIG['google_site_verification']) + '"></head>')
         style = (ROOT / 'assets' / 'style.css').read_text(encoding='utf-8')
         script = (ROOT / 'assets' / 'app.js').read_text(encoding='utf-8')
-        runtime = json.dumps({'repo': CONFIG['repo'], 'comments': CONFIG['comments'], 'analytics_endpoint': CONFIG['analytics_endpoint']})
+        runtime = json.dumps({'repo': CONFIG['repo'], 'comments': CONFIG['comments'], 'analytics_endpoint': CONFIG['analytics_endpoint'], 'google_analytics_id': CONFIG.get('google_analytics_id', '')})
         text = text.replace('<link rel="stylesheet" href="assets/style.css">', '<style>' + style + '</style>')
         text = text.replace('<script defer src="assets/app.js"></script>', '')
+        text = text.replace('<a href="privacy.html">Privacy</a>', '<a href="privacy.html">Privacy</a><button class="privacy-settings" type="button" hidden>Analytics settings</button>')
+        if path == 'privacy.html':
+            text = text.replace('<h2>On this site</h2>', '<h2>Google Analytics</h2><p>Google Analytics 4 measures page views, sessions and interactions only after you accept Google Analytics cookies. Before acceptance, this site does not load the Google tag. Advertising storage, ad personalization and Google Signals are disabled in this implementation. Google may process browser, device and usage information after acceptance. See <a href="https://policies.google.com/privacy">Google’s privacy policy</a>.</p><p>Your choice is stored in your browser for up to 180 days. Use <strong>Analytics settings</strong> in the footer to change it. Rejecting Google Analytics does not disable the separate GoatCounter aggregate measurement described above. Browser blockers may also prevent data collection.</p><h2>On this site</h2>')
         text = text.replace('<meta name="theme-color"', '<meta name="robots" content="' + ('noindex,follow' if path == '404.html' else 'index,follow,max-image-preview:large') + '"><meta property="og:site_name" content="Sumlif Fixbook"><meta name="twitter:card" content="summary"><meta name="theme-color"')
         text = text.replace('</body>', '<script type="application/json" id="fixbook-config">' + runtime + '</script><script>' + script + '</script></body>')
     dest = OUT / path; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_text(text, encoding='utf-8')
@@ -88,7 +91,7 @@ write('privacy.html', shell('Privacy', 'How comments and optional analytics work
 write('404.html', shell('Page not found', 'Find a troubleshooting note in the Fixbook archive.', '<main id="main" class="simple"><p class="eyebrow">404 / NOTE NOT FOUND</p><h1>That page took<br>a wrong turn.</h1><p><a href="'+BASE+'/index.html">Return to the notebook →</a></p></main>','404.html'))
 for name in ['style.css','app.js','icon.svg']:
     dest = OUT / 'assets' / name; dest.parent.mkdir(exist_ok=True); shutil.copyfile(ROOT/'assets'/name,dest)
-write('assets/config.json',json.dumps({'repo':CONFIG['repo'],'comments':CONFIG['comments'],'analytics_endpoint':CONFIG['analytics_endpoint']}))
+write('assets/config.json',json.dumps({'repo':CONFIG['repo'],'comments':CONFIG['comments'],'analytics_endpoint':CONFIG['analytics_endpoint'],'google_analytics_id':CONFIG.get('google_analytics_id','')}))
 write('.nojekyll','')
 write('robots.txt',f'User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n')
 paths = ['index.html','about.html','privacy.html']+[p['slug']+'.html' for p in POSTS]

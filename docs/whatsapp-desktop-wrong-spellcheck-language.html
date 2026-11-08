@@ -2,6 +2,9 @@
 @media(max-width:850px){.hero{gap:35px;padding-top:50px}.hero-note{padding:24px}.hero-note h2{font-size:28px}.article-layout{grid-template-columns:1fr;gap:20px}.toc{position:static;border-right:0;border-bottom:1px solid var(--line);padding-bottom:22px;display:flex;flex-direction:row;flex-wrap:wrap;gap:12px 20px}.toc p{width:100%}.tools{align-items:flex-start;flex-direction:column}.search{width:100%}.search input{width:100%}}
 @media(max-width:600px){.header{padding:20px}.brand{font-size:18px}.brand-icon{width:32px;height:34px;line-height:34px;font-size:22px}.header nav{gap:15px;font-size:12px}.github{display:none}main{padding:0 20px}.hero{grid-template-columns:1fr;gap:42px;padding:45px 0 48px}.hero h1{font-size:57px}.hero-description{font-size:16px}.hero-note{transform:none;box-shadow:6px 6px 0 #e2e7d8;padding:23px}.hero-note h2{font-size:29px}.note-icon{margin-top:20px}.section-title{display:block}.section-title>p{margin-top:12px}.cards{grid-template-columns:1fr}.card{padding:23px}.principles{grid-template-columns:1fr;gap:25px}.principles h3{margin-top:7px}footer{display:block;padding:25px 20px}footer>div{margin:20px 0 12px}footer small{text-align:left}.article-heading h1{font-size:39px;letter-spacing:-1.4px}.article-heading{padding-top:28px}.simple{padding-top:45px}.simple h1{font-size:40px}.byline{font-size:11px}.tested{font-size:11px}.article-layout{padding-top:25px}article h2{font-size:25px}.next a{font-size:17px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}}
+
+.privacy-settings{border:0;background:none;padding:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}.consent-panel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:20;background:#fffefa;border:1px solid #aab9a0;border-radius:8px;box-shadow:0 8px 40px #14392f30;padding:20px 24px;max-width:950px;width:calc(100% - 32px);display:flex;align-items:center;gap:24px}.consent-panel strong{font-size:16px}.consent-panel p{font-size:13px;line-height:1.6;margin:6px 0 0;color:#566459}.consent-actions{display:flex;gap:10px;flex-shrink:0}.consent-actions button{border:1px solid #14392f;border-radius:5px;padding:10px 12px;background:#fffefa;color:#14392f;font-size:12px;cursor:pointer}.consent-actions button[data-choice=granted]{background:#14392f;color:white}@media(max-width:750px){.consent-panel{display:block;padding:18px}.consent-actions{margin-top:14px;flex-wrap:wrap}footer>div{flex-wrap:wrap}}
+
 </style><link rel="alternate" type="application/rss+xml" title="Sumlif Fixbook" href="feed.xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "name": "WhatsApp underlines correct words? Fix the spell-check language.", "description": "A tested WebView2 workaround for WhatsApp Desktop when the spell checker ignores your writing language. Keep Windows in English.", "url": "https://sumlif.github.io/fixbook/whatsapp-desktop-wrong-spellcheck-language.html", "inLanguage": "en", "headline": "WhatsApp underlines correct words? Fix the spell-check language.", "datePublished": "2026-11-08T12:00:00+03:00", "dateModified": "2026-11-08T12:00:00+03:00", "author": {"@type": "Person", "name": "Salih", "url": "https://sumlif.github.io/fixbook/about.html"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sumlif.github.io/fixbook/whatsapp-desktop-wrong-spellcheck-language.html"}, "isPartOf": {"@type": "Blog", "name": "Sumlif Fixbook", "url": "https://sumlif.github.io/fixbook/"}}</script></head><body><a class="skip" href="#main">Skip to content</a><header class="header"><a class="brand" href="index.html"><span class="brand-icon">F<span>↗</span></span><span>sumlif<span class="brand-light"> / fixbook</span></span></a><nav aria-label="Main"><a href="index.html#notes">The fixes</a><a href="about.html">About</a><a class="github" href="https://github.com/sumlif/fixbook">GitHub ↗</a></nav></header><main id="main"><section class="article-heading"><a class="back" href="index.html#notes">← Back to the notebook</a><div class="article-label"><span class="tag">WhatsApp</span><span class="note-number">NOTE / 001</span></div><h1>WhatsApp underlines correct words? Fix the spell-check language.</h1><div class="byline">Salih <span>·</span> 08 November 2026 <span>·</span> 6 min read</div><p class="tested">✓ Confirmed in one real troubleshooting session · Turkish tested</p></section><div class="article-layout"><aside class="toc"><p>ON THIS PAGE</p><a href="#scope">Tested environment</a><a href="#symptom">How to recognize this problem</a><a href="#fix">Apply the workaround</a><a href="#languages">Use a different language</a><a href="#diagnostics">Check the startup language</a><a href="#undo">Undo the change</a><a href="#did-not-work">What did not work in this case</a><a href="#sources">References</a><a href="#discussion">Questions &amp; discussion</a></aside><article><p class="lead">Your keyboard is set correctly. The language pack is installed. Yet WhatsApp underlines almost every word in your language and suggests English replacements.</p>
 <div class="callout"><strong>The fix that worked</strong><p>Start WhatsApp’s WebView2 component with the desired language using an app-specific registry override. In our test, <code>--lang=tr-TR</code> enabled Turkish spell checking while Windows stayed in English.</p></div>
 <h2 id="scope">Tested environment</h2><ul><li>Windows 11, English display language.</li><li>WhatsApp Desktop <code>2.3000.1053651158.264201</code>.</li><li>Microsoft Edge WebView2 <code>157.0.4341.42</code>.</li><li>Writing language: Turkish. Confirmed on 8 November 2026.</li></ul>
@@ -17,7 +20,7 @@ Where-Object { $_.Name -eq &#x27;msedgewebview2.exe&#x27; -and $_.CommandLine -m
 Select-Object -ExpandProperty CommandLine</code></pre></div><p>Look for processes belonging to <code>WhatsApp.Root.exe</code> and the <code>WhatsAppDesktop</code> data folder. In the original case, renderer and utility processes had <code>--lang=en-US</code>. This is a useful clue about runtime language, not proof by itself of the dictionary being used.</p>
 <h2 id="undo">Undo the change</h2><p>If there was no previous value, remove only the value created above:</p><div class="code"><button class="copy" type="button">Copy</button><pre><code>reg delete &quot;HKCU\Software\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments&quot; /v WhatsApp.Root.exe /f</code></pre></div><p>Fully close and reopen WhatsApp. If a value already existed before the test, restore its original contents instead of deleting it.</p>
 <h2 id="did-not-work">What did not work in this case</h2><ul><li>Reordering Windows’ preferred languages and restarting Windows.</li><li>Changing the keyboard or enabling multilingual text suggestions.</li><li>Changing WhatsApp’s interface language to Turkish.</li><li>Editing <code>spellcheck</code> and <code>intl.selected_languages</code> in the WebView2 Preferences file: WhatsApp rewrote the settings on startup.</li></ul>
-<h2 id="sources">References</h2><ul><li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl">Microsoft: application-specific WebView2 registry overrides</a></li><li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/webview-features-flags">Microsoft: WebView2 flags, including lang, and their limitations</a></li></ul><section class="discussion" id="discussion"><p class="eyebrow">COMPARE NOTES</p><h2>Questions &amp; discussion</h2><p>Did this work on your version or in another language? Share your setup or ask a question. A GitHub account is required to post. Comments are public; remove personal details from logs.</p><a class="button secondary" href="https://github.com/sumlif/fixbook/issues/new?title=Question%3A%20WhatsApp%20underlines%20correct%20words%3F%20Fix%20the%20spell-check%20language.&amp;body=Article%3A%20https%3A//sumlif.github.io/fixbook/whatsapp-desktop-wrong-spellcheck-language.html%0A%0AApp%20version%3A%0AWindows%20version%3A%0AWriting%20language%3A%0A%0AWhat%20happened%3F%0A%0APlease%20remove%20personal%20data%20from%20logs%20and%20screenshots.">Ask a question on GitHub ↗</a><div id="comments"></div></section></article></div><section class="next"><p class="eyebrow">KEEP EXPLORING</p><a href="chatgpt-codex-wrong-spellcheck-language.html">Change the spell-check dictionary in ChatGPT / Codex Desktop. →</a></section></main><footer><a class="brand" href="index.html">Sumlif Fixbook<span class="dot">.</span></a><p>A growing notebook of problems actually solved.</p><div><a href="feed.xml">RSS feed</a><a href="privacy.html">Privacy</a><a href="https://github.com/sumlif/fixbook">Source ↗</a></div><small>By Salih · Built to be useful.</small></footer><script type="application/json" id="fixbook-config">{"repo": "sumlif/fixbook", "comments": true, "analytics_endpoint": "https://sumlif-fixbook.goatcounter.com/count"}</script><script>(() => {
+<h2 id="sources">References</h2><ul><li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/webview2-idl">Microsoft: application-specific WebView2 registry overrides</a></li><li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/webview-features-flags">Microsoft: WebView2 flags, including lang, and their limitations</a></li></ul><section class="discussion" id="discussion"><p class="eyebrow">COMPARE NOTES</p><h2>Questions &amp; discussion</h2><p>Did this work on your version or in another language? Share your setup or ask a question. A GitHub account is required to post. Comments are public; remove personal details from logs.</p><a class="button secondary" href="https://github.com/sumlif/fixbook/issues/new?title=Question%3A%20WhatsApp%20underlines%20correct%20words%3F%20Fix%20the%20spell-check%20language.&amp;body=Article%3A%20https%3A//sumlif.github.io/fixbook/whatsapp-desktop-wrong-spellcheck-language.html%0A%0AApp%20version%3A%0AWindows%20version%3A%0AWriting%20language%3A%0A%0AWhat%20happened%3F%0A%0APlease%20remove%20personal%20data%20from%20logs%20and%20screenshots.">Ask a question on GitHub ↗</a><div id="comments"></div></section></article></div><section class="next"><p class="eyebrow">KEEP EXPLORING</p><a href="chatgpt-codex-wrong-spellcheck-language.html">Change the spell-check dictionary in ChatGPT / Codex Desktop. →</a></section></main><footer><a class="brand" href="index.html">Sumlif Fixbook<span class="dot">.</span></a><p>A growing notebook of problems actually solved.</p><div><a href="feed.xml">RSS feed</a><a href="privacy.html">Privacy</a><button class="privacy-settings" type="button" hidden>Analytics settings</button><a href="https://github.com/sumlif/fixbook">Source ↗</a></div><small>By Salih · Built to be useful.</small></footer><script type="application/json" id="fixbook-config">{"repo": "sumlif/fixbook", "comments": true, "analytics_endpoint": "https://sumlif-fixbook.goatcounter.com/count", "google_analytics_id": "G-Q0HQNL0LBG"}</script><script>(() => {
   const search = document.querySelector('#search');
   const cards = [...document.querySelectorAll('.card')];
   let filter = 'all';
@@ -57,6 +60,60 @@ Select-Object -ExpandProperty CommandLine</code></pre></div><p>Look for processe
   const configuration = embedded ? Promise.resolve(JSON.parse(embedded.textContent)) :
     (script?.src ? fetch(new URL('config.json', script.src)).then(r => { if (!r.ok) throw Error('Config unavailable'); return r.json(); }) : Promise.resolve({}));
   configuration.then(config => {
+    if (/^G-[A-Z0-9]+$/.test(config.google_analytics_id || '')) {
+      const measurementId = config.google_analytics_id;
+      const preferenceKey = 'fixbook.google-analytics.v1';
+      let preference = null;
+      try {
+        const saved = JSON.parse(localStorage.getItem(preferenceKey));
+        if (saved && ['granted', 'denied'].includes(saved.value) && Date.now() - saved.time < 180 * 86400000) preference = saved.value;
+      } catch (_) {}
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', {analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'});
+      let googleLoaded = false;
+      function loadGoogle() {
+        if (googleLoaded) return;
+        googleLoaded = true;
+        window['ga-disable-' + measurementId] = false;
+        window.gtag('consent', 'update', {analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'});
+        window.gtag('js', new Date());
+        window.gtag('config', measurementId, {allow_google_signals: false, allow_ad_personalization_signals: false, cookie_prefix: 'fixbook', cookie_path: '/fixbook/', cookie_domain: 'none', page_location: location.origin + location.pathname});
+        const google = document.createElement('script');
+        google.async = true;
+        google.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+        document.head.append(google);
+      }
+      const panel = document.createElement('section');
+      panel.className = 'consent-panel'; panel.setAttribute('aria-label', 'Google Analytics preferences');
+      panel.innerHTML = '<div><strong>Help improve this notebook?</strong><p>Allow Google Analytics cookies to measure visits and article engagement. You can change this later. <a href="privacy.html">Privacy details</a></p></div><div class="consent-actions"><button type="button" data-choice="denied">Reject Google Analytics</button><button type="button" data-choice="granted">Accept Google Analytics</button></div><span class="sr-only" aria-live="polite" id="consent-status"></span>';
+      document.body.append(panel);
+      panel.hidden = preference !== null;
+      const settings = document.querySelector('.privacy-settings');
+      if (settings) {
+        settings.hidden = false;
+        settings.addEventListener('click', () => { panel.hidden = false; panel.querySelector('button').focus(); });
+      }
+      panel.querySelectorAll('[data-choice]').forEach(button => button.addEventListener('click', () => {
+        const value = button.dataset.choice;
+        try { localStorage.setItem(preferenceKey, JSON.stringify({value, time: Date.now()})); } catch (_) {}
+        panel.hidden = true;
+        if (value === 'granted') { preference = value; loadGoogle(); }
+        else {
+          window['ga-disable-' + measurementId] = true;
+          document.cookie.split(';').map(c => c.split('=')[0].trim()).filter(name => name.startsWith('fixbook')).forEach(name => {
+            for (const path of ['/fixbook/', '/']) {
+              document.cookie = name + '=; Max-Age=0; path=' + path + '; SameSite=Lax';
+              document.cookie = name + '=; Max-Age=0; path=' + path + '; domain=' + location.hostname + '; SameSite=Lax';
+            }
+          });
+          if (googleLoaded) location.reload();
+          preference = value;
+        }
+        settings?.focus();
+      }));
+      if (preference === 'granted') loadGoogle();
+    }
     if (config.comments && document.querySelector('#comments')) {
       const comments = document.createElement('script');
       comments.src = 'https://utteranc.es/client.js';
