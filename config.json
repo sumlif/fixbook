@@ -1,6 +1,6 @@
 {
   "url": "https://sumlif.github.io/fixbook",
   "repo": "sumlif/fixbook",
-  "comments": false,
+  "comments": true,
   "analytics_endpoint": ""
 }
