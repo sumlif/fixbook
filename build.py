@@ -59,6 +59,8 @@ def shell(title, desc, content, path='index.html', article=None):
 
 def write(path, text):
     if path.endswith('.html'):
+        if path == 'index.html' and CONFIG.get('google_site_verification'):
+            text = text.replace('</head>', '<meta name="google-site-verification" content="' + esc(CONFIG['google_site_verification']) + '"></head>')
         style = (ROOT / 'assets' / 'style.css').read_text(encoding='utf-8')
         script = (ROOT / 'assets' / 'app.js').read_text(encoding='utf-8')
         runtime = json.dumps({'repo': CONFIG['repo'], 'comments': CONFIG['comments'], 'analytics_endpoint': CONFIG['analytics_endpoint']})
