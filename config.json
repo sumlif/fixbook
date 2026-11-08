@@ -2,5 +2,5 @@
   "url": "https://sumlif.github.io/fixbook",
   "repo": "sumlif/fixbook",
   "comments": true,
-  "analytics_endpoint": ""
+  "analytics_endpoint": "https://sumlif-fixbook.goatcounter.com/count"
 }
